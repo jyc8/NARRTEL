@@ -31,8 +31,7 @@ public class DragDropBunny : MonoBehaviour
     void Update()
     {
         //if we have money and we can drag a new bunny
-        if (Input.GetMouseButtonDown(0) && !isDragging &&
-            GameManager.Instance.MoneyAvailable >= Constants.BunnyCost)
+        if (Input.GetMouseButtonDown(0) && !isDragging)
         {
             ResetTempBackgroundColor();
             Vector2 location = mainCamera.ScreenToWorldPoint(Input.mousePosition);
