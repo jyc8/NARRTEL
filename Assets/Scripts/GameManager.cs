@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     private GameObject WaypointsParent;
     //file pulled from resources
     private LevelStuffFromXML levelStuffFromXML;
+    //will spawn carrots on screen
+    public CarrotSpawner CarrotSpawner;
 
     //helpful variables for our player
     [HideInInspector]
@@ -249,7 +251,24 @@ public class GameManager : MonoBehaviour
     /// Increase or decrease money available
     /// </summary>
     /// <param name="money"></param>
-
+    public void AlterMoneyAvailable(int money)
+    {
+        MoneyAvailable += money;
+        //we're also modifying the BunnyGenerator alpha color
+        //yeah, I know, I could use an event for that, next time!
+        if (MoneyAvailable < Constants.BunnyCost)
+        {
+            Color temp = BunnyGeneratorSprite.color;
+            temp.a = 0.3f;
+            BunnyGeneratorSprite.color = temp;
+        }
+        else
+        {
+            Color temp = BunnyGeneratorSprite.color;
+            temp.a = 1.0f;
+            BunnyGeneratorSprite.color = temp;
+        }
+    }
 
     /// <summary>
     /// Show GUI stuff with the deprecated way

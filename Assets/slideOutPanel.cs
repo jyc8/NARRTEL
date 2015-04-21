@@ -144,6 +144,7 @@ public class slideOutPanel : MonoBehaviour {
 			    && hits.Where(x=>x.collider.gameObject.tag == "Bunny").Count() == 1)
 			{
 				//we can leave a bunny here, so decrease money and activate it
+				GameManager.Instance.AlterMoneyAvailable(-Constants.BunnyCost);
 				newObject.transform.position = 
 					hits.Where(x => x.collider.gameObject.tag == "Background")
 						.First().collider.gameObject.transform.position;
