@@ -5,7 +5,7 @@ using System.Linq;
 using Assets.Scripts;
 
 public class slideOutPanel : MonoBehaviour {
-
+	private Camera mainCamera;
 	private GameObject slidePanelObject;
 	private GameObject suggestionIcon;
 	public Sprite suggestionsAlertSprite;
@@ -63,15 +63,13 @@ public class slideOutPanel : MonoBehaviour {
 
 	//will be colored red if we cannot place a bunny there
 	private GameObject tempBackgroundBehindPath;
-	private Camera mainCamera;
+
 	//type of bunnies we'll create
 	public GameObject ObjectPrefab;
 	//the starting object for the drag
 	bool isDragging = false;
 	//temp bunny
 	private GameObject newObject;
-
-
 
 	public void objectButtonClicked(int buttonNumber) {
 		Debug.Log (buttonNumber);
@@ -85,7 +83,13 @@ public class slideOutPanel : MonoBehaviour {
 			//create a temp bunny to drag around
 			newObject = Instantiate(ObjectPrefab, Input.mousePosition, Quaternion.identity) as GameObject;
 			Debug.Log (buttonNumber);
+
+
 		}
+		//Close Tabs
+		anim.enabled = true;
+		anim.Play ("slideOutRight");
+		isOpen = false;
 	}
 
 	public void suggestionAlert() {
@@ -131,6 +135,7 @@ public class slideOutPanel : MonoBehaviour {
 		}
 		//we're stopping dragging
 		if (Input.GetMouseButtonDown(0) && isDragging)
+		//(ObjectGenerator.GetComponent<CircleCollider2D>() == Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
 		{
 			ResetTempBackgroundColor();
 			//check if we can leave the bunny here
