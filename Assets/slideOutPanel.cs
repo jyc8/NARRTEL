@@ -67,11 +67,10 @@ public class slideOutPanel : MonoBehaviour {
 	public GameObject ObjectPrefab;
 	//the starting object for the drag
 	bool isDragging = false;
-	//temp bunny
 	private GameObject newObject;
 
 	public void objectButtonClicked(int buttonNumber) {
-		Debug.Log (buttonNumber);
+		//Debug.Log (buttonNumber);
 		if (buttonNumber == 0){
 			ResetTempBackgroundColor();
 			Vector2 location = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -81,9 +80,6 @@ public class slideOutPanel : MonoBehaviour {
 			isDragging = true;
 			//create a temp bunny to drag around
 			newObject = Instantiate(ObjectPrefab, Input.mousePosition, Quaternion.identity) as GameObject;
-			Debug.Log (buttonNumber);
-
-
 		}
 		//Close Tabs
 		anim.enabled = true;
@@ -104,14 +100,11 @@ public class slideOutPanel : MonoBehaviour {
 			if (hits.Length > 0 && hits[0].collider != null)
 			{
 				newObject.transform.position = hits[0].collider.gameObject.transform.position;
-				
-				//if we're hitting a path or tower
-				//or there is an existing bunny there
-				//we use > 1 since we're hovering over the newBunny gameobject 
-				//(i.e. there is already a bunny there)
+
+
 				if (hits.Where(x => x.collider.gameObject.tag == "Path"
 					|| x.collider.gameObject.tag == "Tower").Count() > 0
-				    || hits.Where(x=>x.collider.gameObject.tag == "Bunny").Count() > 1)
+				    || hits.Where(x => x.collider.gameObject.tag == "Asset").Count() > 1)
 				{
 					//we cannot place a bunny there
 					GameObject backgroundBehindPath = hits.Where
@@ -140,12 +133,14 @@ public class slideOutPanel : MonoBehaviour {
 			//check if we can leave the bunny here
 			Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 			
-			RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction,
-				Mathf.Infinity, ~(1 << LayerMask.NameToLayer("BunnyGenerator")));
+			RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction);
+
+			Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Asset").Count());
 			//in order to place it, we must have a background and no other bunnies
 			if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
-			    && hits.Where(x => x.collider.gameObject.tag == "Path").Count() == 0
-			    && hits.Where(x => x.collider.gameObject.tag == "Bunny").Count() == 1)
+			    && hits.Where(x => x.collider.gameObject.tag == "Tower").Count() == 0
+			    && hits.Where(x => x.collider.gameObject.tag == "Asset").Count() == 1)
+			
 			{
 				//we can leave a bunny here, so decrease money and activate it
 				newObject.transform.position = 

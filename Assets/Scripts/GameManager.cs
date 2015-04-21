@@ -90,16 +90,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void IgnoreLayerCollisions()
     {
-        int bunnyLayerID = LayerMask.NameToLayer("Bunny");
+        int bunnyLayerID = LayerMask.NameToLayer("Asset");
         //int enemyLayerID = LayerMask.NameToLayer("Enemy");
         int arrowLayerID = LayerMask.NameToLayer("Arrow");
-        int bunnyGeneratorLayerID = LayerMask.NameToLayer("BunnyGenerator");
         int backgroundLayerID = LayerMask.NameToLayer("Background");
         //int pathLayerID = LayerMask.NameToLayer("Path");
         int towerLayerID = LayerMask.NameToLayer("Tower");
         //int carrotLayerID = LayerMask.NameToLayer("Carrot");
         //Physics2D.IgnoreLayerCollision(bunnyLayerID, enemyLayerID); //Bunny and Enemy (when dragging the bunny)
-        Physics2D.IgnoreLayerCollision(arrowLayerID, bunnyGeneratorLayerID); //Arrow and BunnyGenerator
         Physics2D.IgnoreLayerCollision(arrowLayerID, backgroundLayerID); //Arrow and Background
         //Physics2D.IgnoreLayerCollision(arrowLayerID, pathLayerID); //Arrow and Path
         Physics2D.IgnoreLayerCollision(arrowLayerID, bunnyLayerID); //Arrow and Bunny
