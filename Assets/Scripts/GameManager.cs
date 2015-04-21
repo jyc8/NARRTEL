@@ -72,22 +72,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void CreateLevelFromXML()
     {
-        /*foreach (var position in levelStuffFromXML.Paths)
-        {
-            GameObject go = Instantiate(PathPrefab, position, 
-                Quaternion.identity) as GameObject;
-            go.GetComponent<SpriteRenderer>().sortingLayerName = "Path";
-            go.transform.parent = PathPiecesParent.transform;
-        }*/
-
-        /*for (int i = 0; i < levelStuffFromXML.Waypoints.Count; i++)
-        {
-            GameObject go = new GameObject();
-            go.transform.position = levelStuffFromXML.Waypoints[i];
-            go.transform.parent = WaypointsParent.transform;
-            go.tag = "Waypoint";
-            go.name = "Waypoints" + i.ToString();
-        }*/
 
         GameObject tower = Instantiate(TowerPrefab, levelStuffFromXML.Tower,
             Quaternion.identity) as GameObject;
@@ -123,52 +107,6 @@ public class GameManager : MonoBehaviour
         //Physics2D.IgnoreLayerCollision(arrowLayerID, carrotLayerID); //Arrow and Carrot
     }
 
-
-
-    /*IEnumerator NextRound()
-    {
-        //give the player 2 secs to do stuff
-        yield return new WaitForSeconds(2f);
-        //get a reference to the next round details
-        Round currentRound = levelStuffFromXML.Rounds[currentRoundIndex];
-        for (int i = 0; i < currentRound.NoOfEnemies; i++)
-        {//spawn a new enemy
-            //GameObject enemy = Instantiate(EnemyPrefab, Waypoints[0].position, Quaternion.identity) as GameObject;
-            Enemy enemyComponent = enemy.GetComponent<Enemy>();
-            //set speed and enemyKilled handler
-            enemyComponent.Speed += Mathf.Clamp(currentRoundIndex, 1f, 5f);
-            enemyComponent.EnemyKilled += OnEnemyKilled;
-            //add it to the list and wait till you spawn the next one
-            Enemies.Add(enemy);
-            yield return new WaitForSeconds(1f / (currentRoundIndex == 0 ? 1 : currentRoundIndex));
-        }
-
-    }*/
-
-    /// <summary>
-    /// Handler for the enemy killed event
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    /*void OnEnemyKilled(object sender, EventArgs e)
-    {
-        bool startNewRound = false;
-        //explicit lock, since this may occur any time by any enemy
-        //not 100% that this is needed, but better safe than sorry!
-        lock (lockerObject)
-        {
-            if (Enemies.Where(x => x != null).Count() == 0 && CurrentGameState == GameState.Playing)
-            {
-                startNewRound = true;
-            }
-        }
-        if (startNewRound)
-            CheckAndStartNewRound();
-    }*/
-
-    /// <summary>
-    /// Starts a new round (if available) and sets the FinalRound flag
-    /// </summary>
     private void CheckAndStartNewRound()
     {
         if (currentRoundIndex < levelStuffFromXML.Rounds.Count - 1)
@@ -229,53 +167,5 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /*private void DestroyExistingEnemiesAndCarrots()
-    {
-        //get all the enemies
-        foreach (var item in Enemies)
-        {
-            if (item != null)
-                Destroy(item.gameObject);
-        }
-        //get all the carrots
-        var carrots = GameObject.FindGameObjectsWithTag("Carrot");
-        foreach (var item in carrots)
-        {
-            Destroy(item);
-        }
-    }*/
 
-    /// <summary>
-    /// Increase or decrease money available
-    /// </summary>
-    /// <param name="money"></param>
-
-
-    /// <summary>
-    /// Show GUI stuff with the deprecated way
-    /// Long live Unity 4.6!
-    /// </summary>
-    void OnGUI()
-    {
-        Utilities.AutoResize(800, 480);
-        switch (CurrentGameState)
-        {
-            case GameState.Start:
-                infoText.text = "Tap to start!";
-                break;
-            case GameState.Playing:
-                infoText.text = "Money: " + MoneyAvailable.ToString() + "\n"
-                    + "Life: " + Lives.ToString() + "\n" +
-                    string.Format("round {0} of {1}", currentRoundIndex + 1, levelStuffFromXML.Rounds.Count);
-                break;
-            case GameState.Won:
-                infoText.text = "Won! Tap to restart!";
-                break;
-            case GameState.Lost:
-                infoText.text = "Lost :( Tap to restart!";
-                break;
-            default:
-                break;
-        }
-    }
 }

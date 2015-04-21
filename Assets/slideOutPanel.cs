@@ -63,7 +63,6 @@ public class slideOutPanel : MonoBehaviour {
 
 	//will be colored red if we cannot place a bunny there
 	private GameObject tempBackgroundBehindPath;
-
 	//type of bunnies we'll create
 	public GameObject ObjectPrefab;
 	//the starting object for the drag
@@ -111,7 +110,7 @@ public class slideOutPanel : MonoBehaviour {
 				//we use > 1 since we're hovering over the newBunny gameobject 
 				//(i.e. there is already a bunny there)
 				if (hits.Where(x => x.collider.gameObject.tag == "Path"
-				               || x.collider.gameObject.tag == "Tower").Count() > 0
+					|| x.collider.gameObject.tag == "Tower").Count() > 0
 				    || hits.Where(x=>x.collider.gameObject.tag == "Bunny").Count() > 1)
 				{
 					//we cannot place a bunny there
@@ -142,17 +141,16 @@ public class slideOutPanel : MonoBehaviour {
 			Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 			
 			RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction,
-			                                           Mathf.Infinity, ~(1 << LayerMask.NameToLayer("BunnyGenerator")));
+				Mathf.Infinity, ~(1 << LayerMask.NameToLayer("BunnyGenerator")));
 			//in order to place it, we must have a background and no other bunnies
-			if (hits.Where(x=>x.collider.gameObject.tag == "Background").Count() > 0
+			if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
 			    && hits.Where(x => x.collider.gameObject.tag == "Path").Count() == 0
-			    && hits.Where(x=>x.collider.gameObject.tag == "Bunny").Count() == 1)
+			    && hits.Where(x => x.collider.gameObject.tag == "Bunny").Count() == 1)
 			{
 				//we can leave a bunny here, so decrease money and activate it
 				newObject.transform.position = 
 					hits.Where(x => x.collider.gameObject.tag == "Background")
 						.First().collider.gameObject.transform.position;
-				newObject.GetComponent<Bunny>().Activate();
 			}
 			else
 			{
@@ -160,6 +158,10 @@ public class slideOutPanel : MonoBehaviour {
 				Destroy(newObject);
 			}
 			isDragging = false;
+			//Open Tabs
+			anim.enabled = true;
+			anim.Play ("slideInRight");
+			isOpen = true;
 		}
 	}
 
