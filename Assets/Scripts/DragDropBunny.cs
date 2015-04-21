@@ -19,7 +19,7 @@ public class DragDropBunny : MonoBehaviour
     //type of bunnies we'll create
     public GameObject BunnyPrefab;
     //the starting object for the drag
-    public GameObject BunnyGenerator;
+    public GameObject ObjectGenerator;
     bool isDragging = false;
     //temp bunny
     private GameObject newBunny;
@@ -36,13 +36,13 @@ public class DragDropBunny : MonoBehaviour
             ResetTempBackgroundColor();
             Vector2 location = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             //if user has tapped onto the bunny generator
-            if (BunnyGenerator.GetComponent<CircleCollider2D>() ==
+            if (ObjectGenerator.GetComponent<CircleCollider2D>() ==
                 Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
             {
                 //initiate dragging operation and create a new bunny for us to drag
                 isDragging = true;
                 //create a temp bunny to drag around
-                newBunny = Instantiate(BunnyPrefab, BunnyGenerator.transform.position, Quaternion.identity)
+                newBunny = Instantiate(BunnyPrefab, ObjectGenerator.transform.position, Quaternion.identity)
                     as GameObject;
             }
         }
