@@ -64,22 +64,22 @@ public class slideOutPanel : MonoBehaviour {
 	//will be colored red if we cannot place a bunny there
 	private GameObject tempBackgroundBehindPath;
 	//type of bunnies we'll create
-	public GameObject ObjectPrefab;
+	public GameObject[] ObjectPrefab;
 	//the starting object for the drag
 	bool isDragging = false;
 	private GameObject newObject;
 
 	public void objectButtonClicked(int buttonNumber) {
 		//Debug.Log (buttonNumber);
-		if (buttonNumber == 0){
+		if (buttonNumber > 0){
+			//Set grid highlight colour to default
 			ResetTempBackgroundColor();
+			//Set location to mouse location
 			Vector2 location = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-			//if user has tapped onto the bunny generator
-
-			//initiate dragging operation and create a new bunny for us to drag
+			//Set asset is selected
 			isDragging = true;
-			//create a temp bunny to drag around
-			newObject = Instantiate(ObjectPrefab, Input.mousePosition, Quaternion.identity) as GameObject;
+			//Instantiate new object
+			newObject = Instantiate(ObjectPrefab[buttonNumber], Input.mousePosition, Quaternion.identity) as GameObject;
 		}
 		//Close Tabs
 		anim.enabled = true;
