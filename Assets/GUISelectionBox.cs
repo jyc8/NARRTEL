@@ -58,9 +58,9 @@ public class GUISelectionBox : MonoBehaviour
 		if (Input.GetMouseButtonUp(0))
 		{
 			// Reset
-			initialClickPosition = Vector2.zero;
-			selectionBox.anchoredPosition = Vector2.zero;
-			selectionBox.sizeDelta = Vector2.zero;
+			//initialClickPosition = Vector2.zero;
+			//selectionBox.anchoredPosition = Vector2.zero;
+			//selectionBox.sizeDelta = Vector2.zero;
 		}
 	}
 }
