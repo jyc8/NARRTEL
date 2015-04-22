@@ -26,6 +26,14 @@ public class slideOutPanel : MonoBehaviour {
 
 	private GameObject newObject;
 
+	// This variable will store the location of wherever we first click before dragging.
+	private Vector2 initialClickPosition = Vector2.zero;
+	
+	// Draggable inspector reference to the Image GameObject's RectTransform.
+	public GameObject selectionCanvas;
+	public GameObject selectionBoxObject;
+	private RectTransform selectionBox;
+
 	//Buttons
 	private bool assetSelected = false;
 	private bool selectionSelected = false;
@@ -68,6 +76,14 @@ public class slideOutPanel : MonoBehaviour {
 		//Debug.Log (buttonNumber);
 		if (buttonNumber == 0){
 			selectionSelected = true;
+
+			//Destroy all active Selection Boxes
+			foreach(GameObject o in GameObject.FindGameObjectsWithTag("Selection")) {
+				Destroy(o);
+			}
+
+			newObject = Instantiate(selectionBoxObject, Input.mousePosition, Quaternion.identity) as GameObject;
+			newObject.transform.parent = selectionCanvas.transform;
 		}
 		if (buttonNumber > 0){
 			//Set grid highlight colour to default
@@ -76,7 +92,6 @@ public class slideOutPanel : MonoBehaviour {
 			Vector2 location = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 			//Set asset is selected
 			assetSelected = true;
-			//Instantiate new object
 			newObject = Instantiate(ObjectPrefab[buttonNumber], Input.mousePosition, Quaternion.identity) as GameObject;
 		}
 		//Close Tabs
@@ -87,84 +102,15 @@ public class slideOutPanel : MonoBehaviour {
 		suggestionIcon.GetComponent<Image> ().sprite = suggestionsAlertSprite;
 	}
 
-	// Draggable inspector reference to the Image GameObject's RectTransform.
-	public RectTransform selectionBox;
-	
-	// This variable will store the location of wherever we first click before dragging.
-	private Vector2 initialClickPosition = Vector2.zero;
+
 
 
 	void Update()
 	{
-		//assetSelected
-		if (assetSelected)
-		{
-			Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-			RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction);
-			if (hits.Length > 0 && hits[0].collider != null)
-			{
-				newObject.transform.position = hits[0].collider.gameObject.transform.position;
-
-
-				if (hits.Where(x => x.collider.gameObject.tag == "Asset").Count() > 1)
-				{
-					//we cannot place a bunny there
-					GameObject backgroundBehindPath = hits.Where
-						(x => x.collider.gameObject.tag == "Background").First().collider.gameObject;
-					//make the sprite material "more red"
-					//to let the user know that we can't place a bunny here
-					backgroundBehindPath.GetComponent<SpriteRenderer>().color = Constants.RedColor;
-					
-					if (tempBackgroundBehindPath != backgroundBehindPath)
-						ResetTempBackgroundColor();
-					//cache it to revert later
-					tempBackgroundBehindPath = backgroundBehindPath;
-				}
-				else //just reset the color on previously set paths
-				{
-					ResetTempBackgroundColor();
-				}
-				
-			}
-
-			//we're stopping dragging
-			if (Input.GetMouseButtonDown(0)	)
-				//(ObjectGenerator.GetComponent<CircleCollider2D>() == Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
-			{
-				ResetTempBackgroundColor();
-				//check if we can leave the bunny here
-				ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-				
-				hits = Physics2D.RaycastAll(ray.origin, ray.direction);
-				
-				Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Asset").Count());
-				//in order to place it, we must have a background and no other bunnies
-				if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
-				    && hits.Where(x => x.collider.gameObject.tag == "Tower").Count() == 0
-				    && hits.Where(x => x.collider.gameObject.tag == "Asset").Count() == 1)
-					
-				{
-					//we can leave a bunny here, so decrease money and activate it
-					newObject.transform.position = 
-						hits.Where(x => x.collider.gameObject.tag == "Background")
-							.First().collider.gameObject.transform.position;
-				}
-				else
-				{
-					//we can't leave a bunny here, so destroy the temp one
-					Destroy(newObject);
-				}
-				assetSelected = false;
-				//Open Tabs
-				openTabs();
-			}
-		}
-
-
 		//Selection Code
 		// Click somewhere in the Game View.
 		if (selectionSelected == true){
-
+			selectionBox = newObject.GetComponent<RectTransform>();
 			if (Input.GetMouseButtonDown(0)){
 				// Get the initial click position of the mouse. No need to convert to GUI space
 				// since we are using the lower left as anchor and pivot.
@@ -218,6 +164,71 @@ public class slideOutPanel : MonoBehaviour {
 				selectReady = false;
 			}
 		}		
+
+		//assetSelected
+		if (assetSelected)
+		{
+			Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+			RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction);
+			if (hits.Length > 0 && hits[0].collider != null)
+			{
+				newObject.transform.position = hits[0].collider.gameObject.transform.position;
+				
+				
+				if (hits.Where(x => x.collider.gameObject.tag == "Asset").Count() > 1)
+				{
+					//we cannot place a bunny there
+					GameObject backgroundBehindPath = hits.Where
+						(x => x.collider.gameObject.tag == "Background").First().collider.gameObject;
+					//make the sprite material "more red"
+					//to let the user know that we can't place a bunny here
+					backgroundBehindPath.GetComponent<SpriteRenderer>().color = Constants.RedColor;
+					
+					if (tempBackgroundBehindPath != backgroundBehindPath)
+						ResetTempBackgroundColor();
+					//cache it to revert later
+					tempBackgroundBehindPath = backgroundBehindPath;
+				}
+				else //just reset the color on previously set paths
+				{
+					ResetTempBackgroundColor();
+				}
+				
+			}
+			
+			//we're stopping dragging
+			if (Input.GetMouseButtonDown(0)	)
+				//(ObjectGenerator.GetComponent<CircleCollider2D>() == Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
+			{
+				ResetTempBackgroundColor();
+				//check if we can leave the bunny here
+				ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+				
+				hits = Physics2D.RaycastAll(ray.origin, ray.direction);
+				
+				Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Asset").Count());
+				//in order to place it, we must have a background and no other bunnies
+				if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
+				    && hits.Where(x => x.collider.gameObject.tag == "Tower").Count() == 0
+				    && hits.Where(x => x.collider.gameObject.tag == "Asset").Count() == 1)
+					
+				{
+					//we can leave a bunny here, so decrease money and activate it
+					newObject.transform.position = 
+						hits.Where(x => x.collider.gameObject.tag == "Background")
+							.First().collider.gameObject.transform.position;
+				}
+				else
+				{
+					//we can't leave a bunny here, so destroy the temp one
+					Destroy(newObject);
+				}
+				assetSelected = false;
+				//Open Tabs
+				openTabs();
+			}
+		}
+
 	}
 
 	//make background sprite appear as it is
