@@ -102,9 +102,7 @@ public class slideOutPanel : MonoBehaviour {
 				newObject.transform.position = hits[0].collider.gameObject.transform.position;
 
 
-				if (hits.Where(x => x.collider.gameObject.tag == "Path"
-					|| x.collider.gameObject.tag == "Tower").Count() > 0
-				    || hits.Where(x => x.collider.gameObject.tag == "Asset").Count() > 1)
+				if (hits.Where(x => x.collider.gameObject.tag == "Asset").Count() > 1)
 				{
 					//we cannot place a bunny there
 					GameObject backgroundBehindPath = hits.Where
