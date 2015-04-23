@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Linq;
 using Assets.Scripts;
+using UnityEngine.EventSystems;
 
 public class slideOutPanel : MonoBehaviour {
 	private Camera mainCamera;
@@ -83,6 +84,7 @@ public class slideOutPanel : MonoBehaviour {
 			}
 
 			newObject = Instantiate(selectionBoxObject, Input.mousePosition, Quaternion.identity) as GameObject;
+			newObject.SetActive(true);
 			newObject.transform.parent = selectionCanvas.transform;
 		}
 		if (buttonNumber > 0){
@@ -158,7 +160,7 @@ public class slideOutPanel : MonoBehaviour {
 				//initialClickPosition = Vector2.zero;
 				//selectionBox.anchoredPosition = Vector2.zero;
 				//selectionBox.sizeDelta = Vector2.zero;
-				Debug.Log("Off");
+				//Debug.Log("Off");
 				openTabs();
 				selectionSelected = false;
 				selectReady = false;
@@ -195,38 +197,6 @@ public class slideOutPanel : MonoBehaviour {
 				}
 				
 			}
-			
-			//we're stopping dragging
-			if (Input.GetMouseButtonDown(0)	)
-				//(ObjectGenerator.GetComponent<CircleCollider2D>() == Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
-			{
-				ResetTempBackgroundColor();
-				//check if we can leave the bunny here
-				ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-				
-				hits = Physics2D.RaycastAll(ray.origin, ray.direction);
-				
-				Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Asset").Count());
-				//in order to place it, we must have a background and no other bunnies
-				if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
-				    && hits.Where(x => x.collider.gameObject.tag == "Tower").Count() == 0
-				    && hits.Where(x => x.collider.gameObject.tag == "Asset").Count() == 1)
-					
-				{
-					//we can leave a bunny here, so decrease money and activate it
-					newObject.transform.position = 
-						hits.Where(x => x.collider.gameObject.tag == "Background")
-							.First().collider.gameObject.transform.position;
-				}
-				else
-				{
-					//we can't leave a bunny here, so destroy the temp one
-					Destroy(newObject);
-				}
-				assetSelected = false;
-				//Open Tabs
-				openTabs();
-			}
 		}
 
 	}
@@ -250,5 +220,43 @@ public class slideOutPanel : MonoBehaviour {
 		anim.enabled = true;
 		anim.Play ("slideOutRight");
 		isOpen = false;
+	}
+
+	public void selectionClicked(){
+		Debug.Log("Clicked");
+		//we're stopping dragging
+		if (assetSelected)
+			//(ObjectGenerator.GetComponent<CircleCollider2D>() == Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
+		{
+
+			Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+			RaycastHit2D[] hits = Physics2D.RaycastAll(ray.origin, ray.direction);
+			ResetTempBackgroundColor();
+			//check if we can leave the bunny here
+			ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+			
+			hits = Physics2D.RaycastAll(ray.origin, ray.direction);
+
+			Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Asset").Count());
+			//in order to place it, we must have a background and no other bunnies
+			if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
+			    && hits.Where(x => x.collider.gameObject.tag == "Asset").Count() == 1)
+				
+			{
+				//we can leave a bunny here, so decrease money and activate it
+				newObject.transform.position = 
+					hits.Where(x => x.collider.gameObject.tag == "Background")
+						.First().collider.gameObject.transform.position;
+			}
+			else
+			{
+				//we can't leave a bunny here, so destroy the temp one
+				Destroy(newObject);
+			}
+			assetSelected = false;
+			
+			//Open Tabs
+			openTabs();
+		}
 	}
 }
