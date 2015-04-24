@@ -7,7 +7,7 @@ public class StoryEventTrigger : MonoBehaviour {
 
 	//the event that the trigger belongs to
 	public StoryEvent evt;
-	private GameObject lineManager;
+	private GameObject pathManager;
 	public bool placed = false;
 	private bool drawing = false;
 
@@ -19,7 +19,7 @@ public class StoryEventTrigger : MonoBehaviour {
 
 	public void SetEvent(StoryEvent e) {
 		evt = e;
-		lineManager = GameObject.Find ("LineManager");
+		pathManager = GameObject.Find ("PathManager");
 		placed = true;
 	}
 
@@ -42,6 +42,8 @@ public class StoryEventTrigger : MonoBehaviour {
 		if (placed){
 			drawing = true;
 			Debug.Log ("Clicked " + drawing);
+			pathManager.GetComponent<LineManager>().startDrawing(this.gameObject);
+
 		}
-	}
+	}	
 }

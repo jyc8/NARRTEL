@@ -44,12 +44,17 @@ public class slideOutPanel : MonoBehaviour {
 	private bool selectionSelected = false;
 	private bool selectReady = false;
 
+	private GameObject newPath;
+	public GameObject pathSuggestion;
+	private GameObject eventsFolder;
+
 	// Use this for initialization
 	void Start () {
 		mainCamera = Camera.main;
 		slidePanelObject = GameObject.Find ("Map Panel");
 		suggestionIcon = GameObject.Find ("suggestionIcon");
 		suggestionsAlertSprite = Resources.Load <Sprite> ("suggestionsAlert");
+		eventsFolder = GameObject.Find ("Events");
 
 		anim = slidePanelObject.GetComponent<Animator>();
 
@@ -135,6 +140,42 @@ public class slideOutPanel : MonoBehaviour {
 			newSelection.transform.GetChild(0).parent = Map.transform;
 		}
 		Destroy (newSelection);
+	}
+
+	public void clearPath(){
+		foreach (Transform childTransform in eventsFolder.transform){
+			Destroy(childTransform.gameObject);
+		}
+	}
+
+	public void suggestPath(){
+		if (eventsFolder.transform.childCount > 0){
+			suggestionIcon.GetComponent<Image>().sprite = suggestionsAlertSprite;
+			
+			//create newSelection box
+			newPath = Instantiate(pathSuggestion, Input.mousePosition, Quaternion.identity) as GameObject;
+			newPath.transform.GetChild(2).GetComponent<Text>().text = "Name: " + "Bob";
+			newPath.transform.GetChild(3).GetComponent<Text>().text = "" + System.DateTime.Now;
+			
+			//Set Parent for Suggestion and Activate
+			newPath.transform.parent = pathSuggestionsFolder.transform;
+			newPath.SetActive (true);
+			
+			//Set Parent for Selection and Hide
+			GameObject newPathFolder = Instantiate(eventsFolder, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+			newPathFolder.transform.parent = newPath.transform;
+			newPathFolder.SetActive (false);
+
+			//Clear Events Folder
+			clearPath();
+			
+			//newSelection.transform.parent = newPath.transform;
+			//newSelection.SetActive (false);
+			
+			//Sort Suggestions
+			sortBlocks(pathSuggestionsFolder, 200);	
+		}	
+
 	}
 
 	public void createSuggestion(){
