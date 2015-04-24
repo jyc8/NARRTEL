@@ -126,7 +126,7 @@ public class StoryEvent : MonoBehaviour {
 	//Bring up the panel that allows the event to be edited
 	public void EditEvent() {
 		GameObject ep = (GameObject) Instantiate (editPanel, new Vector2(0f,0f), Quaternion.identity);
-		ep.transform.SetParent (GameObject.Find ("Canvas").transform, false);
+		ep.transform.SetParent (GameObject.Find ("Narrative Canvas").transform, false);
 		ep.GetComponent<RectTransform> ().offsetMax = new Vector2 (0f, 0f);
 		ep.GetComponent<RectTransform> ().offsetMin = new Vector2 (0f, 0f);
 		ep.transform.GetChild (0).gameObject.GetComponent<EditEvent> ().SetEvent (this);
@@ -138,7 +138,7 @@ public class StoryEvent : MonoBehaviour {
 
 	public void CreateTooltip() {
 		toolTip = (GameObject)Instantiate (tooltipPrefab, new Vector2(Input.mousePosition.x + 150, Input.mousePosition.y - 100), Quaternion.identity);
-		toolTip.transform.SetParent(GameObject.Find ("Canvas").transform);
+		toolTip.transform.SetParent(GameObject.Find ("Narrative Canvas").transform);
 		toolTip.transform.Find ("PanelManager").GetComponent<TooltipPanel> ().SetEvent (this);
 	}
 	
