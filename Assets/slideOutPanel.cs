@@ -31,6 +31,7 @@ public class slideOutPanel : MonoBehaviour {
 
 	private GameObject newObject;
 	private GameObject newSelection;
+	private GameObject newSuggestion;
 
 	// This variable will store the location of wherever we first click before dragging.
 	private Vector2 initialClickPosition = Vector2.zero;
@@ -103,7 +104,14 @@ public class slideOutPanel : MonoBehaviour {
 		closeTabs();
 	}
 
-	private GameObject newSuggestion;
+	public GameObject Map;
+
+	public void saveChanges(){
+		while (newSelection.transform.childCount > 0) {
+			newSelection.transform.GetChild(0).parent = Map.transform;
+		}
+		Destroy (newSelection);
+	}
 
 	public void createSuggestion(){
 		suggestionIcon.GetComponent<Image>().sprite = suggestionsAlertSprite;
@@ -121,6 +129,7 @@ public class slideOutPanel : MonoBehaviour {
 		sortMapSuggestions ();
 		
 	}
+
 
 	private void sortMapSuggestions(){
 		int count = mapSuggestionsFolder.transform.childCount; 
