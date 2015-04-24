@@ -11,6 +11,7 @@ public class SlidePanel : MonoBehaviour {
 	void Start () {
 		anim = slidingPanel.GetComponent<Animator>();
 		slidIn = false;
+		Slide ();
 	}
 
 	//slide the panel out if it's not, otherwise slide it back in

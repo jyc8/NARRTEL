@@ -13,7 +13,7 @@ public class NewEventButton : MonoBehaviour {
 	}
 
 	public void mouseEntered(){
-		Debug.Log ("Entered New");
+		//Debug.Log ("Entered New");
 
 		GameObject[] gos;
 		gos = GameObject.FindGameObjectsWithTag("Tooltip");

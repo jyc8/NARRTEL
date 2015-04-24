@@ -36,6 +36,8 @@ public class StoryEvent : MonoBehaviour {
 	//set whether we're currently moving the event trigger object
 	private bool movingTrigger;
 
+	private GameObject eventsFolder;
+
 	// Use this for initialization
 	void Start () {
 		eventName = "New Event";
@@ -43,6 +45,7 @@ public class StoryEvent : MonoBehaviour {
 		expanded = false;
 		hidden = false;
 		movingTrigger = false;
+		eventsFolder = GameObject.Find ("Events");
 	}
 	
 	// Update is called once per frame
@@ -65,26 +68,32 @@ public class StoryEvent : MonoBehaviour {
 				//(ObjectGenerator.GetComponent<CircleCollider2D>() == Physics2D.OverlapPoint(location, 1 << LayerMask.NameToLayer("BunnyGenerator")))
 			{
 				//check if we can leave the bunny here
-				ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				
+				ray = Camera.main.ScreenPointToRay(Input.mousePosition);				
 				hits = Physics2D.RaycastAll(ray.origin, ray.direction);
 				
-				Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Asset").Count());
+				//Debug.Log (hits.Where(x => x.collider.gameObject.tag == "Event").Count());
 				//in order to place it, we must have a background and no other bunnies
 				if (hits.Where(x => x.collider.gameObject.tag == "Background").Count() > 0
-				    && hits.Where(x => x.collider.gameObject.tag == "Tower").Count() == 0
-				    && hits.Where(x => x.collider.gameObject.tag == "Asset").Count() == 1)
+				    && hits.Where(x => x.collider.gameObject.tag == "Event").Count() == 1)
 					
 				{
 					//we can leave a bunny here, so decrease money and activate it
 					et.transform.position = 
 						hits.Where(x => x.collider.gameObject.tag == "Background")
 							.First().collider.gameObject.transform.position;
+
+					//Slide all Panels
+					GameObject[] gos;
+					gos = GameObject.FindGameObjectsWithTag("Panel");
+					foreach (GameObject obj in gos){
+						obj.GetComponent<SlidePanel>().Slide();
+					}
+
 				}
 				else
 				{
 					//we can't leave a bunny here, so destroy the temp one
-					//Destroy(et);
+					Destroy(et);
 				}
 				et.GetComponent<StoryEventTrigger>().SetEvent (this);
 				movingTrigger = false;
@@ -95,6 +104,14 @@ public class StoryEvent : MonoBehaviour {
 	public void CreateEventTrigger() {
 		et = (GameObject)Instantiate (triggerPrefab, Input.mousePosition, Quaternion.identity);
 		movingTrigger = true;
+		et.transform.parent = eventsFolder.transform;
+
+		//Slide all Panels
+		GameObject[] gos;
+		gos = GameObject.FindGameObjectsWithTag("Panel");
+		foreach (GameObject obj in gos){
+			obj.GetComponent<SlidePanel>().Slide ();
+		}
 	}
 
 	public void ExpandOrCollapse() {
@@ -147,4 +164,6 @@ public class StoryEvent : MonoBehaviour {
 			GameObject.Destroy (toolTip);
 		}
 	}
+
+
 }

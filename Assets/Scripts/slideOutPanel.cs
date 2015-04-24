@@ -55,6 +55,7 @@ public class slideOutPanel : MonoBehaviour {
 
 		//disable it on start to stop it from playing the default animation
 		anim.enabled = false;
+		closeTabs ();
 	}
 
 	public void tabClicked(int tabIndex) {
