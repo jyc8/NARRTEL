@@ -4,6 +4,7 @@ using System.Collections;
 public class MapSuggestion : MonoBehaviour {
 	
 	public GameObject thisObj;
+	public GameObject map;
 
 	public void showSuggestion(){
 		//Debug.Log ("entered");
@@ -21,4 +22,10 @@ public class MapSuggestion : MonoBehaviour {
 		Destroy (thisObj);
 	}
 
+	public void applySuggestion(){
+		while (thisObj.transform.GetChild(4).transform.childCount > 0) {
+			thisObj.transform.GetChild(4).transform.GetChild(0).parent = map.transform;
+		}
+		Destroy (thisObj);
+	}
 }
