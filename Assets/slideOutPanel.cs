@@ -92,7 +92,7 @@ public class slideOutPanel : MonoBehaviour {
 			newSelection.transform.parent = selectionCanvas.transform;
 		}
 		if (buttonNumber > 0){
-			//Set grid highlight colour to default
+			//Set grid ahighlight colour to default
 			ResetTempBackgroundColor();
 			//Set location to mouse location
 			Vector2 location = mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -105,6 +105,29 @@ public class slideOutPanel : MonoBehaviour {
 	}
 
 	public GameObject Map;
+	private GameObject newState;
+	public GameObject saveState;
+	public GameObject saveStateFolder;
+
+	public void createState(){
+		//create newSelection box
+		newState = Instantiate(saveState, Input.mousePosition, Quaternion.identity) as GameObject;
+		newState.transform.GetChild(2).GetComponent<Text>().text = "Name: " + "Bob";
+		newState.transform.GetChild(3).GetComponent<Text>().text = "" + System.DateTime.Now;
+		
+		//Set Parent for Suggestion and Activate
+		newState.transform.parent = saveStateFolder.transform;
+		newState.SetActive (true);
+		
+		//Set Parent for Selection and Hide
+		GameObject newMap = Instantiate(Map, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+		newMap.transform.parent = newState.transform;
+		newMap.SetActive (false);
+		
+		//Sort Suggestions
+		sortBlocks(saveStateFolder, 100);		
+	}
+
 
 	public void saveChanges(){
 		while (newSelection.transform.childCount > 0) {
@@ -121,29 +144,27 @@ public class slideOutPanel : MonoBehaviour {
 		newSuggestion.transform.GetChild(2).GetComponent<Text>().text = "Name: " + "Bob";
 		newSuggestion.transform.GetChild(3).GetComponent<Text>().text = "" + System.DateTime.Now;
 
-
-		//Set Parent and Activate
+		//Set Parent for Suggestion and Activate
 		newSuggestion.transform.parent = mapSuggestionsFolder.transform;
 		newSuggestion.SetActive (true);
 
-
-		
+		//Set Parent for Selection and Hide
 		newSelection.transform.parent = newSuggestion.transform;
 		newSelection.SetActive (false);
 
-		sortMapSuggestions ();
-		
+		//Sort Suggestions
+		sortBlocks(mapSuggestionsFolder, 200);		
 	}
 
 
-	private void sortMapSuggestions(){
-		int count = mapSuggestionsFolder.transform.childCount; 
+	private void sortBlocks(GameObject folder, int initial){
+		int count = folder.transform.childCount; 
 		int i = 0;
 		while (count > 0) {
-			Transform tmp = mapSuggestionsFolder.transform.GetChild(i).GetChild(4);
-			tmp.parent = mapSuggestionsFolder.transform;
-			mapSuggestionsFolder.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200 - 100 * i);
-			tmp.parent = mapSuggestionsFolder.transform.GetChild(i).transform;
+			Transform tmp = folder.transform.GetChild(i).GetChild(4);
+			tmp.parent = folder.transform;
+			folder.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, initial - 100 * i);
+			tmp.parent = folder.transform.GetChild(i).transform;
 			count = count - 1;
 			i = i + 1;
 		}
