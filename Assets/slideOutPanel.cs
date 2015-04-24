@@ -11,8 +11,6 @@ public class slideOutPanel : MonoBehaviour {
 	private GameObject suggestionIcon;
 	public Sprite suggestionsAlertSprite;
 
-	private Image suggestionsAlertImage;
-
 	//animator reference
 	private Animator anim;
 
@@ -24,15 +22,20 @@ public class slideOutPanel : MonoBehaviour {
 	private GameObject tempBackgroundBehindPath;
 	//type of bunnies we'll create
 	public GameObject[] ObjectPrefab;
+	public GameObject mapSuggestionsFolder;
+	public GameObject pathSuggestionsFolder;
+	// Draggable inspector reference to the Image GameObject's RectTransform.
+	public GameObject selectionCanvas;
+	public GameObject selectionBoxObject;
+	public GameObject mapSuggestion;
 
 	private GameObject newObject;
+	private GameObject newSelection;
 
 	// This variable will store the location of wherever we first click before dragging.
 	private Vector2 initialClickPosition = Vector2.zero;
 	
-	// Draggable inspector reference to the Image GameObject's RectTransform.
-	public GameObject selectionCanvas;
-	public GameObject selectionBoxObject;
+
 	private RectTransform selectionBox;
 
 	//Buttons
@@ -83,9 +86,9 @@ public class slideOutPanel : MonoBehaviour {
 				Destroy(o);
 			}
 
-			newObject = Instantiate(selectionBoxObject, Input.mousePosition, Quaternion.identity) as GameObject;
-			newObject.SetActive(true);
-			newObject.transform.parent = selectionCanvas.transform;
+			newSelection = Instantiate(selectionBoxObject, Input.mousePosition, Quaternion.identity) as GameObject;
+			newSelection.SetActive(true);
+			newSelection.transform.parent = selectionCanvas.transform;
 		}
 		if (buttonNumber > 0){
 			//Set grid highlight colour to default
@@ -100,19 +103,44 @@ public class slideOutPanel : MonoBehaviour {
 		closeTabs();
 	}
 
-	public void suggestionAlert() {
-		suggestionIcon.GetComponent<Image> ().sprite = suggestionsAlertSprite;
+	private GameObject newSuggestion;
+
+	public void createSuggestion(){
+		suggestionIcon.GetComponent<Image>().sprite = suggestionsAlertSprite;
+
+		//create newSelection box
+		newSuggestion = Instantiate(mapSuggestion, Input.mousePosition, Quaternion.identity) as GameObject;
+		newSuggestion.transform.parent = mapSuggestionsFolder.transform;
+		newSuggestion.SetActive (true);
+
+
+		
+		newSelection.transform.parent = newSuggestion.transform;
+		newSelection.SetActive (false);
+
+		sortMapSuggestions ();
+		
 	}
 
-
-
+	private void sortMapSuggestions(){
+		int count = mapSuggestionsFolder.transform.childCount; 
+		int i = 0;
+		while (count > 0) {
+			Transform tmp = mapSuggestionsFolder.transform.GetChild(i).GetChild(2);
+			tmp.parent = mapSuggestionsFolder.transform;
+			mapSuggestionsFolder.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200 - 100 * i);
+			tmp.parent = mapSuggestionsFolder.transform.GetChild(i).transform;
+			count = count - 1;
+			i = i + 1;
+		}
+	}
 
 	void Update()
 	{
 		//Selection Code
 		// Click somewhere in the Game View.
 		if (selectionSelected == true){
-			selectionBox = newObject.GetComponent<RectTransform>();
+			selectionBox = newSelection.GetComponent<RectTransform>();
 			if (Input.GetMouseButtonDown(0)){
 				// Get the initial click position of the mouse. No need to convert to GUI space
 				// since we are using the lower left as anchor and pivot.
@@ -247,6 +275,7 @@ public class slideOutPanel : MonoBehaviour {
 				newObject.transform.position = 
 					hits.Where(x => x.collider.gameObject.tag == "Background")
 						.First().collider.gameObject.transform.position;
+				newObject.transform.parent = newSelection.transform;
 			}
 			else
 			{
