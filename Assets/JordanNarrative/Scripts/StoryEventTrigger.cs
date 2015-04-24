@@ -17,15 +17,16 @@ public class StoryEventTrigger : MonoBehaviour {
 		evt = e;
 	}
 
-	public void CreateTooltip() {
+	private void OnMouseEnter(){
+		Debug.Log ("tooltip on");
 		if (evt != null) {
 			toolTip = (GameObject)Instantiate (tooltipPrefab, new Vector2(Input.mousePosition.x + 150, Input.mousePosition.y - 100), Quaternion.identity);
-			toolTip.transform.SetParent(GameObject.Find ("Canvas").transform);
+			toolTip.transform.SetParent(GameObject.Find ("Narrative Canvas").transform);
 			toolTip.transform.Find ("PanelManager").GetComponent<TooltipPanel> ().SetEvent (evt);
 		}
 	}
 
-	public void DestroyTooltip() {
+	private void OnMouseExit(){
 		if (toolTip != null) {
 			GameObject.Destroy (toolTip);
 		}
