@@ -125,7 +125,7 @@ public class slideOutPanel : MonoBehaviour {
 		newMap.SetActive (false);
 		
 		//Sort Suggestions
-		sortBlocks(saveStateFolder, 100);		
+		sortBlocks(saveStateFolder, 150);		
 	}
 
 
@@ -162,12 +162,12 @@ public class slideOutPanel : MonoBehaviour {
 		int i = 0;
 		while (count > 0) {
 			Transform tmp = folder.transform.GetChild(i).GetChild(4);
-			tmp.parent = folder.transform;
+			tmp.SetParent(folder.transform);
 			folder.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, initial - 100 * i);
-			tmp.parent = folder.transform.GetChild(i).transform;
+			tmp.SetParent(folder.transform.GetChild(i).transform);
 			count = count - 1;
 			i = i + 1;
-		}
+		} 
 	}
 
 	void Update()
