@@ -81,21 +81,15 @@ public class StoryEvent : MonoBehaviour {
 					et.transform.position = 
 						hits.Where(x => x.collider.gameObject.tag == "Background")
 							.First().collider.gameObject.transform.position;
-
-					//Slide all Panels
-					GameObject[] gos;
-					gos = GameObject.FindGameObjectsWithTag("Panel");
-					foreach (GameObject obj in gos){
-						obj.GetComponent<SlidePanel>().Slide();
-					}
-
+					et.GetComponent<StoryEventTrigger>().SetEvent (this);
+					GameObject.Find ("NarrativePanel").GetComponent<SlidePanel>().Slide ();
 				}
 				else
 				{
 					//we can't leave a bunny here, so destroy the temp one
 					Destroy(et);
 				}
-				et.GetComponent<StoryEventTrigger>().SetEvent (this);
+
 				movingTrigger = false;
 			}
 		}
@@ -106,12 +100,9 @@ public class StoryEvent : MonoBehaviour {
 		movingTrigger = true;
 		et.transform.parent = eventsFolder.transform;
 
-		//Slide all Panels
-		GameObject[] gos;
-		gos = GameObject.FindGameObjectsWithTag("Panel");
-		foreach (GameObject obj in gos){
-			obj.GetComponent<SlidePanel>().Slide ();
-		}
+		//Slide Panel
+		GameObject.Find ("NarrativePanel").GetComponent<SlidePanel>().Slide ();
+	
 	}
 
 	public void ExpandOrCollapse() {
