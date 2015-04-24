@@ -118,6 +118,11 @@ public class slideOutPanel : MonoBehaviour {
 
 		//create newSelection box
 		newSuggestion = Instantiate(mapSuggestion, Input.mousePosition, Quaternion.identity) as GameObject;
+		newSuggestion.transform.GetChild(2).GetComponent<Text>().text = "Name: " + "Bob";
+		newSuggestion.transform.GetChild(3).GetComponent<Text>().text = "" + System.DateTime.Now;
+
+
+		//Set Parent and Activate
 		newSuggestion.transform.parent = mapSuggestionsFolder.transform;
 		newSuggestion.SetActive (true);
 
