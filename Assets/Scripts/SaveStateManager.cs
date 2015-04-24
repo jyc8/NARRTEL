@@ -26,13 +26,21 @@ public class SaveStateManager : MonoBehaviour {
 	}
 
 	public void applyState(){
+
 		foreach (Transform childTransform in map.transform){
 			Destroy (childTransform.gameObject);
 		}
 
-		foreach (Transform childTransform in thisObj.transform.GetChild(4).transform){
-			childTransform.parent = map.transform;
+		//while(map.transform.childCount > 0){
+		//	Destroy (map.transform.GetChild(0));
+		//}
+
+		while(thisObj.transform.GetChild(4).transform.childCount > 0){
+			thisObj.transform.GetChild(4).transform.GetChild(0).parent = map.transform;
 		}
+		map.SetActive(true);
+		Destroy (thisObj);
+
 	}
 	
 }
