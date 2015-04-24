@@ -7,13 +7,13 @@ public class MapSuggestion : MonoBehaviour {
 
 	public void showSuggestion(){
 		//Debug.Log ("entered");
-		GameObject selection = this.transform.GetChild(2).gameObject;
+		GameObject selection = this.transform.GetChild(4).gameObject;
 		selection.SetActive (true);
 	}
 
 	public void hideSuggestion(){
 		//Debug.Log ("exited");
-		GameObject selection = this.transform.GetChild(2).gameObject;
+		GameObject selection = this.transform.GetChild(4).gameObject;
 		selection.SetActive (false);
 	}
 

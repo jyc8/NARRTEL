@@ -135,7 +135,7 @@ public class slideOutPanel : MonoBehaviour {
 		int count = mapSuggestionsFolder.transform.childCount; 
 		int i = 0;
 		while (count > 0) {
-			Transform tmp = mapSuggestionsFolder.transform.GetChild(i).GetChild(2);
+			Transform tmp = mapSuggestionsFolder.transform.GetChild(i).GetChild(4);
 			tmp.parent = mapSuggestionsFolder.transform;
 			mapSuggestionsFolder.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200 - 100 * i);
 			tmp.parent = mapSuggestionsFolder.transform.GetChild(i).transform;
