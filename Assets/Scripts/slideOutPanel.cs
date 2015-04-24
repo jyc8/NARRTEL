@@ -47,7 +47,7 @@ public class slideOutPanel : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		mainCamera = Camera.main;
-		slidePanelObject = GameObject.Find ("slideOutPanel");
+		slidePanelObject = GameObject.Find ("Map Panel");
 		suggestionIcon = GameObject.Find ("suggestionIcon");
 		suggestionsAlertSprite = Resources.Load <Sprite> ("suggestionsAlert");
 
