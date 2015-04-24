@@ -11,4 +11,19 @@ public class NewEventButton : MonoBehaviour {
 			GameObject.Find ("NarrativePanel").GetComponent<NarrativeManager>().CreateStoryEvent (this.transform.parent.GetComponent<StoryEvent>());
 		}
 	}
+
+	public void mouseEntered(){
+		Debug.Log ("Entered New");
+
+		GameObject[] gos;
+		gos = GameObject.FindGameObjectsWithTag("Tooltip");
+
+		foreach (GameObject obj in gos){
+			Destroy(obj);
+		}
+
+		//while (gos.Length > 0){
+		//	Destroy(gos[0]);
+		//}
+	}
 }
